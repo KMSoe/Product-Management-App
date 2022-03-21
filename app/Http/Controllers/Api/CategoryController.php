@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -55,7 +56,6 @@ class CategoryController extends BaseController
             ],
             "data" => $categories,
         ], 200);
-
     }
 
     /**
@@ -82,7 +82,7 @@ class CategoryController extends BaseController
 
             return $this->sendCreatedResponse($category->id, $category);
         } catch (QueryException $e) {
-            return $this->sendError(["query" => ["Error in Creating Category"]], 400);
+            return $this->sendError(["query" => ["Error in Creating Category"]], 500);
         }
     }
 
@@ -104,9 +104,30 @@ class CategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        try {
+            $category = Category::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                "name" => "required"
+            ]);
+    
+            if ($validator->fails()) {
+                return $this->sendError($validator->errors(), 400);
+            }
+
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->save();
+
+            return $this->sendUpdatedResponse($category->id, $category);
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError(["modelNotFound" => ["Model Not Found"]], 404);
+        } catch (QueryException $e) {
+            return $this->sendError(["query" => ["Error in Updating Category"]], 500);
+        }
     }
 
     /**
@@ -115,8 +136,20 @@ class CategoryController extends BaseController
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        
+        try {
+            $category = Category::findOrFail($id);
+
+            $countDeleted = $category->delete();
+
+            if ($countDeleted) {
+                return response()->json([], 204);
+            }
+        } catch (ModelNotFoundException $e) {
+            return $this->sendError(["modelNotFound" => ["Model Not Found"]], 404);
+        } catch (QueryException $e) {
+            return $this->sendError(["query" => ["Error in Deleting Category"]], 500);
+        }
     }
 }

@@ -19,26 +19,32 @@ class CategorySeeder extends Seeder
             [
                 'name' => 'Electrical Vehicle/e-Power',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
             [
                 'name' => 'Compact Car',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
             [
                 'name' => 'Light Car',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
             [
                 'name' => 'Minivan',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
             [
                 'name' => 'Sports & Specialty',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
             [
                 'name' => 'Sedan',
                 'description' => Str::words(50),
+                'user_id' => 1,
             ],
         ];
 

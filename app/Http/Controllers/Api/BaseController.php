@@ -27,6 +27,17 @@ class BaseController extends Controller
         return response()->json($response, 201);
     }
 
+    public function sendUpdatedResponse($id, $data)
+    {
+        $response = [
+            'success' => true,
+            "id" => $id,
+            'data' => $data,
+        ];
+
+        return response()->json($response, 200);
+    }
+
     /**
      * return error response.
      *
