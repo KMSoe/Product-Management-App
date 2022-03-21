@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends BaseController
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+        $this->middleware('admin');
+    }
+
     /**
      * Display a listing of the resource.
      *
